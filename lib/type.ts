@@ -16,3 +16,25 @@ export interface Teacher {
     createdAt?: string
     updatedAt?: string
 }
+
+export interface Student {
+    _id?: string | ObjectId  // string trên frontend, ObjectId trên backend
+    name: string
+    grade: string
+    yearOfBirth: string       // Năm sinh
+    address: string           // Địa chỉ
+    parentName: string // Giới thiệu bản thân
+    parentPhone: string // Điện thoại
+    classIds: string[];// Danh sách lớp học
+    createdAt?: string
+    updatedAt?: string
+}
+
+export interface Class {
+    _id?: string | ObjectId
+    subject: string;
+    grade: string;
+    teacherName: string;
+    room: string;
+    studentIds?: string[];
+}

@@ -1,3 +1,5 @@
+'use client'
+
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -7,157 +9,219 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowLeft, Save, Upload } from "lucide-react"
+import AdminHeader from "@/app/admin/header"
+import { useParams, useRouter } from "next/navigation"
+import StudentClassesForm from "@/components/StudentClassForm"
+import { useEffect, useState } from "react"
+import { Class, Student } from "@/lib/type"
 
 export default function EditStudentPage({ params }: { params: { id: string } }) {
+
+  const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
+  const [student, setStudent] = useState<Student | null>(null)
+  const [name, setName] = useState("")
+  const [parentPhone, setParentPhone] = useState("")
+  const [yearofbirth, setYearOfBirth] = useState("")
+  const [address, setAddress] = useState("")
+  const [grade, setGrade] = useState("")
+  const [parentName, setParentName] = useState("")
   // Sample data - in a real app, this would come from a database
-  const studentId = params.id
+  // const studentId = params.id
+  const router = useRouter()
+  const param = useParams()
+  const studentId = param?.id as string
 
   // Get student details based on ID
-  const student = {
-    id: studentId,
-    name: "Alex Johnson",
-    age: 14,
-    grade: "9th Grade",
-    class: "Mathematics",
-    dateOfBirth: "2011-05-15",
-    parentName: "Robert & Mary Johnson",
-    parentEmail: "johnson@example.com",
-    parentPhone: "(555) 123-4567",
-    address: "456 Family Street, Learning City, LC 12345",
-    emergencyContact: "Mary Johnson - (555) 987-6543",
-    enrollmentDate: "2025-01-15",
-    performance: "Excellent",
-    notes:
-      "Alex shows exceptional aptitude for mathematics, particularly in geometry. He actively participates in class discussions and helps other students.",
-    medicalInfo: "No allergies or medical conditions",
-    image: "/placeholder.svg?height=100&width=100",
+  const getStudentById = async (id: string) => {
+    // setLoading(true)
+    try {
+      const res = await fetch(`/api/student/${id}`)
+      const data = await res.json()
+      setStudent(data.student)
+      setInfo(data.student)
+    } catch (err) {
+      console.error("Error fetching teacher:", err)
+      alert("Không tìm thấy giáo viên")
+    }
   }
 
-  // Sample classes for dropdown
-  const classes = [
-    { id: 1, name: "Mathematics", grade: "9th Grade" },
-    { id: 2, name: "English", grade: "8th Grade" },
-    { id: 3, name: "Science", grade: "9th Grade" },
-    { id: 4, name: "History", grade: "8th Grade" },
-    { id: 5, name: "Physics", grade: "10th Grade" },
-    { id: 6, name: "Computer Science", grade: "10th Grade" },
-  ]
+  const setInfo = (student: Student) => {
+    setName(student.name);
+    setYearOfBirth(student.yearOfBirth);
+    setAddress(student.address);
+    setGrade(student.grade);
+    setParentName(student.parentName);
+    setParentPhone(student.parentPhone);
+    setSelectedClasses(student.classIds || []);
+  }
 
-  // Performance options
-  const performanceOptions = ["Excellent", "Good", "Satisfactory", "Needs Improvement"]
+  useEffect(() => {
+    if (studentId) {
+      getStudentById(studentId)
+    }
+  }, [studentId])
 
-  // Grade options
-  const grades = ["7th Grade", "8th Grade", "9th Grade", "10th Grade"]
+  const handleSave = async () => {
+    if (!name || !yearofbirth) {
+      alert("Nhập tên học sinh và năm sinh");
+      return;
+    }
+
+    try {
+      const newStudent = {
+        name: name,
+        yearOfBirth: yearofbirth,
+        address: address,
+        grade: grade,
+        parentName: parentName,
+        parentPhone: parentPhone,
+        classIds: selectedClasses, // Assuming selectedClasses is an array of class IDs
+      };
+      console.log(newStudent)
+
+      const response = await fetch(`/api/student/${student?._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newStudent),
+      })
+
+      if (!response.ok) {
+        throw new Error("Có lỗi xảy ra khi sửa giáo viên")
+      }
+      // closeAddMedicineDialog()
+      alert("Đã sửa thành công")
+      router.push("/admin/students")
+      clearForm()
+
+      updateStudentIdToClass(student?._id?.toString() || ""); // Update class IDs for the student
+    } catch (error) {
+      console.error("Lỗi sửa", error);
+    }
+  }
+
+  const updateStudentIdToClass = async (studentId: string) => {
+    try {
+      const updatePromises = selectedClasses.map((classId) =>
+
+        fetch(`/api/class/${classId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ studentId }),
+        })
+      );
+
+      const results = await Promise.all(updatePromises);
+
+      const hasError = results.some((res) => !res.ok);
+      if (hasError) {
+        alert("Có lỗi xảy ra khi cập nhật học sinh với classId.");
+      } else {
+        console.log("Cập nhật classId cho học sinh thành công");
+      }
+    } catch (error) {
+      console.error("Lỗi khi cập nhật classId cho học sinh:", error);
+      alert("Lỗi khi cập nhật classId cho học sinh.");
+    }
+  }
+
+  const clearForm = () => {
+    setName("");
+    setYearOfBirth("");
+    setAddress("");
+    setGrade("");
+    setParentName("");
+    setParentPhone("");
+    setSelectedClasses([]);
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-        <Link href="/admin" className="flex items-center gap-2 font-semibold">
-          <GraduationCapIcon className="h-6 w-6" />
-          <span>Excel Academy Admin</span>
-        </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link href="/admin" className="text-sm font-medium underline-offset-4 hover:underline">
-            Dashboard
-          </Link>
-          <Link href="/admin/teachers" className="text-sm font-medium underline-offset-4 hover:underline">
-            Teachers
-          </Link>
-          <Link href="/admin/classes" className="text-sm font-medium underline-offset-4 hover:underline">
-            Classes
-          </Link>
-          <Link
-            href="/admin/students"
-            className="text-sm font-medium text-purple-600 underline-offset-4 hover:underline"
-          >
-            Students
-          </Link>
-          <Link href="/admin/schedule" className="text-sm font-medium underline-offset-4 hover:underline">
-            Schedule
-          </Link>
-        </nav>
-        <Button variant="outline" size="sm" className="ml-auto md:hidden">
-          <MenuIcon className="h-4 w-4" />
-          <span className="sr-only">Toggle menu</span>
-        </Button>
-      </header>
+      <AdminHeader />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="flex items-center gap-2">
           <Link href="/admin/students">
             <Button variant="outline" size="sm">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Students
+              Trở lại danh sách học sinh
             </Button>
           </Link>
         </div>
 
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Edit Student</h1>
-            <p className="text-muted-foreground">Update student information</p>
+            <h1 className="text-2xl font-bold tracking-tight">Sửa thông tin học sinh</h1>
           </div>
-          <Button className="bg-purple-600 hover:bg-purple-700">
+          <Button onClick={handleSave} className="bg-purple-600 hover:bg-purple-700">
             <Save className="mr-2 h-4 w-4" />
-            Save Changes
+            Lưu thông tin
           </Button>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>Personal Information</CardTitle>
+              <CardTitle>Thông tin cá nhân</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input id="name" defaultValue={student.name} />
+                <Label htmlFor="name">Họ và tên</Label>
+                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="age">Age</Label>
-                <Input id="age" type="number" defaultValue={student.age} />
+                <Label htmlFor="age">Năm sinh</Label>
+                <Input id="age" type="number" value={yearofbirth} onChange={(e) => setYearOfBirth(e.target.value)} />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="age">Khối</Label>
+                <Input id="grade" type="number" value={grade} onChange={(e) => setGrade(e.target.value)} />
+              </div>
+              {/* <div className="space-y-2">
                 <Label htmlFor="dob">Date of Birth</Label>
                 <Input id="dob" type="date" defaultValue={student.dateOfBirth} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="address">Address</Label>
-                <Input id="address" defaultValue={student.address} />
-              </div>
-              <div className="space-y-2">
+              </div> */}
+
+              {/* <div className="space-y-2">
                 <Label htmlFor="enrollmentDate">Enrollment Date</Label>
                 <Input id="enrollmentDate" type="date" defaultValue={student.enrollmentDate} />
-              </div>
+              </div> */}
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Parent/Guardian Information</CardTitle>
+              <CardTitle>Phụ huynh</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="parentName">Parent/Guardian Name</Label>
-                <Input id="parentName" defaultValue={student.parentName} />
+                <Label htmlFor="parentName">Tên phụ huynh</Label>
+                <Input id="parentName" value={parentName} onChange={(e) => setParentName(e.target.value)} />
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="parentEmail">Email</Label>
                 <Input id="parentEmail" type="email" defaultValue={student.parentEmail} />
+              </div> */}
+              <div className="space-y-2">
+                <Label htmlFor="parentPhone">Điện thoại</Label>
+                <Input id="parentPhone" value={parentPhone} onChange={(e) => setParentPhone(e.target.value)} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="parentPhone">Phone</Label>
-                <Input id="parentPhone" defaultValue={student.parentPhone} />
+                <Label htmlFor="address">Địa chỉ</Label>
+                <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} />
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="emergencyContact">Emergency Contact</Label>
                 <Input id="emergencyContact" defaultValue={student.emergencyContact} />
-              </div>
+              </div> */}
             </CardContent>
           </Card>
 
-          <Card>
+          {/* <Card>
             <CardHeader>
-              <CardTitle>Academic Information</CardTitle>
+              <CardTitle>Danh sách các lớp học sinh tham gia</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -210,9 +274,18 @@ export default function EditStudentPage({ params }: { params: { id: string } }) 
                 <Textarea id="notes" rows={4} defaultValue={student.notes} />
               </div>
             </CardContent>
+          </Card> */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Danh sách các lớp học sinh tham gia</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <StudentClassesForm value={selectedClasses}
+                onChange={(updatedClasses) => setSelectedClasses(updatedClasses)} />
+            </CardContent>
           </Card>
 
-          <Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle>Medical Information</CardTitle>
             </CardHeader>
@@ -222,9 +295,9 @@ export default function EditStudentPage({ params }: { params: { id: string } }) 
                 <Textarea id="medicalInfo" rows={4} defaultValue={student.medicalInfo} />
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
 
-          <Card className="md:col-span-2">
+          {/* <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle>Profile Image</CardTitle>
             </CardHeader>
@@ -248,50 +321,11 @@ export default function EditStudentPage({ params }: { params: { id: string } }) 
                 </div>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </main>
     </div>
   )
 }
 
-function GraduationCapIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-      <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
-    </svg>
-  )
-}
 
-function MenuIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
-  )
-}

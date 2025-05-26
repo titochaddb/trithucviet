@@ -11,13 +11,13 @@ import { useEffect, useState } from "react"
 import { Teacher } from "@/lib/type"
 
 export default function TeachersPage() {
-  const [loading, setLoading] = useState(true)
+  // const [loading, setLoading] = useState(true)
   const [teachers, seTeachers] = useState<Teacher[]>([])
-  const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null)
+  // const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null)
 
 
   const fetchTeachers = async () => {
-    setLoading(true)
+    // setLoading(true)
     try {
       // const params = new URLSearchParams()
       // if (searchKeyword) params.set("search", searchKeyword)
@@ -30,12 +30,14 @@ export default function TeachersPage() {
 
       seTeachers(data.teachers)
       // setTotalPages(data.totalPages)
-    } catch (err) {
+    } 
+    catch (err) {
       console.error("Error fetching medicines:", err)
       // showAlert("Lỗi khi tải danh sách thuốc", "error")
-    } finally {
-      setLoading(false)
-    }
+    } 
+    // finally {
+    //   setLoading(false)
+    // }
   }
   useEffect(() => {
     fetchTeachers()
