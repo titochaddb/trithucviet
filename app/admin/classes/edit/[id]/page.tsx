@@ -10,12 +10,14 @@ import { ArrowLeft, Save } from "lucide-react"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { use } from "react";
 
-export default function EditClassPage({ params }: { params: { id: string } }) {
+
+export default function EditClassPage() {
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
   const router = useRouter()
-  const param = useParams()
-  const classId = param?.id as string
+  const { id: classId } = useParams<{ id: string }>()
+   // Extract classId from params
   const [thisClass, setThisClass] = useState<Class | null>(null)
   // Sample data - in a real app, this would come from a database
   const [subject, setSubject] = useState("")
@@ -44,11 +46,11 @@ export default function EditClassPage({ params }: { params: { id: string } }) {
   }, [classId])
 
   const setInfo = (thisClass: Class) => {
-    setThisClass(thisClass)
-    setSubject(thisClass.subject)
-    setGrade(thisClass.grade)
-    setTeacherName(thisClass.teacherName)
-    setRoom(thisClass.room)
+    setThisClass(thisClass || null);
+    setSubject(thisClass.subject || "");
+    setGrade(thisClass.grade || "");
+    setTeacherName(thisClass.teacherName || "");
+    setRoom(thisClass.room || "");
     setSelectedStudents(thisClass.studentIds || []);
   }
   // Sample teachers for dropdown

@@ -4,9 +4,7 @@ import { ObjectId } from "mongodb";
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
     try {
-        console.log("vào đâyy:");
-        const { id } = await params;
-        console.log("classId:", id);
+        const { id } = params;
         const body = await req.json();
         const { studentId } = body;
         console.log("studentId:", studentId);

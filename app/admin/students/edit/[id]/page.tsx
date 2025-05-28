@@ -12,7 +12,7 @@ import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
-export default function EditStudentPage({ params }: { params: { id: string } }) {
+export default function EditStudentPage() {
 
   const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
   const [student, setStudent] = useState<Student | null>(null)
@@ -25,8 +25,7 @@ export default function EditStudentPage({ params }: { params: { id: string } }) 
   // Sample data - in a real app, this would come from a database
   // const studentId = params.id
   const router = useRouter()
-  const param = useParams()
-  const studentId = param?.id as string
+  const { id: studentId } = useParams<{ id: string }>()
 
   // Get student details based on ID
   const getStudentById = async (id: string) => {

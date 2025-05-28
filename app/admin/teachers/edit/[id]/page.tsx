@@ -13,7 +13,7 @@ import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
-export default function EditTeacherPage({ params }: { params: { id: string } }) {
+export default function EditTeacherPage() {
   const [teacher, seTeacher] = useState<Teacher | null>(null)
 
   const [name, setName] = useState("")
@@ -28,8 +28,7 @@ export default function EditTeacherPage({ params }: { params: { id: string } }) 
   const [specialties, setSpecialties] = useState("")
   const [bio, setBio] = useState("")
   // Sample data - in a real app, this would come from a database
-  const param = useParams()
-  const teacherId = param?.id as string
+  const { id: teacherId } = useParams<{ id: string }>()
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
