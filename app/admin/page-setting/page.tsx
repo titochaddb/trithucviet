@@ -33,17 +33,12 @@ export default function PageSettingsPage() {
     const getAllClasses = async () => {
         setLoading(true)
         try {
-            // const params = new URLSearchParams()
-            // if (searchKeyword) params.set("search", searchKeyword)
-            // params.set("page", currentPage.toString())
-            // params.set("limit", limit.toString())
 
             const res = await fetch(`/api/class`)
             // const res = await fetch(`/api/teacher?${params.toString()}`)
             const data = await res.json()
 
             setAllClasses(data.classes)
-            // setTotalPages(data.totalPages)
         }
         catch (err) {
             console.error("Error fetching classes:", err)
@@ -263,8 +258,7 @@ export default function PageSettingsPage() {
             <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Page Settings</h1>
-                        <p className="text-muted-foreground">Manage content displayed on your homepage</p>
+                        <h1 className="text-2xl font-bold tracking-tight">Cài đặt trang chủ</h1>
                     </div>
                     <div className="flex gap-2">
                         {/* <Button variant="outline">
@@ -344,7 +338,7 @@ export default function PageSettingsPage() {
 
                                                     {/* Image Upload and Preview */}
                                                     <div className="lg:col-span-5 space-y-4">
-                                                        <Label>Banner Image</Label>
+                                                        <Label>Hình ảnh banner</Label>
                                                         <div className="space-y-4">
                                                             {/* Image Preview */}
                                                             <div className="relative w-full aspect-[16/9] overflow-hidden rounded-xl shadow-xl ring-1 ring-black/10 bg-white">
@@ -359,7 +353,7 @@ export default function PageSettingsPage() {
                                                                     <div className="flex items-center justify-center h-full">
                                                                         <div className="text-center">
                                                                             <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                                                                            <p className="text-sm text-gray-500">No image selected</p>
+                                                                            <p className="text-sm text-gray-500">Chưa chọn hình ảnh</p>
                                                                         </div>
                                                                     </div>
                                                                 )}
@@ -380,7 +374,7 @@ export default function PageSettingsPage() {
                                                                         className="flex items-center justify-center w-full h-10 px-4 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md cursor-pointer"
                                                                     >
                                                                         <Upload className="mr-2 h-4 w-4" />
-                                                                        Upload Image
+                                                                        Tải lên hình ảnh
                                                                     </Label>
                                                                 </div>
                                                                 {/* {pageSettings?.urlImage && pageSettings.urlImage[banner - 1] && (
@@ -420,7 +414,7 @@ export default function PageSettingsPage() {
                                                 <Checkbox
                                                     id={`teacher-${teacher._id}`}
                                                     checked={pageSettings?.teacherIds?.includes(teacher?._id?.toString() ?? "")}
-                                                    onCheckedChange={(checked) => handleTeacherSelection(teacher._id?.toString() ?? "", checked as boolean)}
+                                                    onCheckedChange={(checked: boolean) => handleTeacherSelection(teacher._id?.toString() ?? "", checked as boolean)}
                                                 />
                                                 <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
                                                     <div className="flex items-center space-x-3">
@@ -480,7 +474,7 @@ export default function PageSettingsPage() {
                                                 <Checkbox
                                                     id={`class-${classItem._id}`}
                                                     checked={pageSettings?.classIds?.includes(classItem?._id?.toString() ?? "")}
-                                                    onCheckedChange={(checked) => handleClassSelection(classItem._id?.toString() ?? "", checked as boolean)}
+                                                    onCheckedChange={(checked: boolean) => handleClassSelection(classItem._id?.toString() ?? "", checked as boolean)}
                                                 />
                                                 <div className="flex-1">
                                                     <div className="flex items-center justify-between mb-2">

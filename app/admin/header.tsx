@@ -9,20 +9,18 @@ export default function AdminHeader() {
     const pathname = usePathname()
 
     const tabs = [
-        { label: "Cài đặt trang chủ", href: "/admin/home-setting" },
-        { label: "Tổng quát", href: "/admin" },
+        // { label: "Tổng quát", href: "/admin" },
         { label: "Giáo viên", href: "/admin/teachers" },
         { label: "Lớp học", href: "/admin/classes" },
         { label: "Học sinh", href: "/admin/students" },
-        { label: "Lịch học", href: "/admin/schedule" },
-        { label: "Báo cáo", href: "/admin/reports" },
+        // { label: "Lịch học", href: "/admin/schedule" },
+        // { label: "Báo cáo", href: "/admin/reports" },
         { label: "Cài đặt", href: "/admin/page-setting" },
-
     ]
 
     return (
         <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-            <Link href="/admin" className="flex items-center gap-2 font-semibold">
+            <Link href="/" className="flex items-center gap-2 font-semibold">
                 <GraduationCapIcon className="h-6 w-6" />
                 <span>Trung tâm trí thức việt</span>
             </Link>

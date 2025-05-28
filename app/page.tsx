@@ -7,6 +7,7 @@ import { BookOpen, GraduationCap, Users, Calendar } from "lucide-react"
 import clientPromise from "@/lib/mongodb"
 import { Class, PageSettings, Teacher } from "@/lib/type"
 import { ObjectId } from "mongodb";
+import { SiteHeader } from "@/components/SiteHeader"
 
 // export async function getServerSideProps() {
 //   // Ở đây giả lập dữ liệu lấy từ database hoặc API
@@ -108,6 +109,7 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen w-full flex-col">
+      <SiteHeader />
       {/* Hero Section */}
       {/* <section className="relative w-full bg-gradient-to-r from-purple-50 to-blue-50 py-12 md:py-24">
         <div className="container max-w-none w-full px-4 md:px-6">

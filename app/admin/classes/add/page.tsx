@@ -46,10 +46,12 @@ export default function AddClassPage() {
       if (!response.ok) {
         throw new Error("Không thể thêm lớp học")
       }
-      const data = await response.json()
+      
       // closeAddMedicineDialog()
       alert("Đã thêm thành công")
+
       clearForm()
+      const data = await response.json()
       console.log(data.result.insertedId)
       updateClassIdToStudent(data.result.insertedId);
     } catch (error) {
