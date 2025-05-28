@@ -1,15 +1,14 @@
 'use client'
-import Link from "next/link"
-import Image from "next/image"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { UserPlus, Search, Edit, Trash2, Mail, Phone, BookOpen, User } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { JSX, SVGProps, useEffect, useState } from "react"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Student } from "@/lib/type"
+import { Edit, Phone, Search, Trash2, User, UserPlus } from "lucide-react"
+import Link from "next/link"
+import { useEffect, useState } from "react"
 import AdminHeader from "../header"
-import { Student, Teacher } from "@/lib/type"
 
 export default function StudentsPage() {
   const [loading, setLoading] = useState(true)

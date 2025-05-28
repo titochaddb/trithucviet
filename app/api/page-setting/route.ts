@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
-import { Class, PageSettings } from "@/lib/type";
+import { PageSettings } from "@/lib/type";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
     const data = await req.json();

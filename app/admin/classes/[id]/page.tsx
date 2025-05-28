@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Edit, Trash2, Mail, Phone, Calendar, Clock, MapPin, User } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { JSX, SVGProps } from "react"
 
 export default function ClassDetailsPage({ params }: { params: { id: string } }) {
   // Sample data - in a real app, this would come from a database
@@ -115,7 +116,7 @@ export default function ClassDetailsPage({ params }: { params: { id: string } })
   ]
 
   // Function to get performance badge color
-  const getPerformanceBadgeColor = (performance) => {
+  const getPerformanceBadgeColor = (performance: string) => {
     switch (performance) {
       case "Excellent":
         return "bg-green-100 text-green-800 hover:bg-green-100"
@@ -453,7 +454,7 @@ export default function ClassDetailsPage({ params }: { params: { id: string } })
   )
 }
 
-function GraduationCapIcon(props) {
+function GraduationCapIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -473,7 +474,7 @@ function GraduationCapIcon(props) {
   )
 }
 
-function MenuIcon(props) {
+function MenuIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -494,7 +495,7 @@ function MenuIcon(props) {
   )
 }
 
-function Plus(props) {
+function Plus(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -514,7 +515,7 @@ function Plus(props) {
   )
 }
 
-function Search(props) {
+function Search(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

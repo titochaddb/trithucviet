@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Calendar, Clock, Download, Users, User } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Admin } from "mongodb"
+import AdminHeader from "@/app/admin/header"
 
 export default function ClassReportPage({ params }: { params: { id: string } }) {
   // Sample data - in a real app, this would come from a database
@@ -112,7 +114,7 @@ export default function ClassReportPage({ params }: { params: { id: string } }) 
   }
 
   // Function to get performance badge color
-  const getPerformanceBadgeColor = (performance) => {
+  const getPerformanceBadgeColor = (performance: string) => {
     switch (performance) {
       case "Excellent":
         return "bg-green-100 text-green-800 hover:bg-green-100"
@@ -129,39 +131,7 @@ export default function ClassReportPage({ params }: { params: { id: string } }) 
 
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-        <Link href="/admin" className="flex items-center gap-2 font-semibold">
-          <GraduationCapIcon className="h-6 w-6" />
-          <span>Excel Academy Admin</span>
-        </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link href="/admin" className="text-sm font-medium underline-offset-4 hover:underline">
-            Dashboard
-          </Link>
-          <Link href="/admin/teachers" className="text-sm font-medium underline-offset-4 hover:underline">
-            Teachers
-          </Link>
-          <Link
-            href="/admin/classes"
-            className="text-sm font-medium text-purple-600 underline-offset-4 hover:underline"
-          >
-            Classes
-          </Link>
-          <Link href="/admin/students" className="text-sm font-medium underline-offset-4 hover:underline">
-            Students
-          </Link>
-          <Link href="/admin/schedule" className="text-sm font-medium underline-offset-4 hover:underline">
-            Schedule
-          </Link>
-          <Link href="/admin/reports" className="text-sm font-medium underline-offset-4 hover:underline">
-            Reports
-          </Link>
-        </nav>
-        <Button variant="outline" size="sm" className="ml-auto md:hidden">
-          <MenuIcon className="h-4 w-4" />
-          <span className="sr-only">Toggle menu</span>
-        </Button>
-      </header>
+      <AdminHeader/>
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="flex items-center gap-2">
           <Link href="/admin/reports">
@@ -366,43 +336,3 @@ export default function ClassReportPage({ params }: { params: { id: string } }) 
   )
 }
 
-function GraduationCapIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-      <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
-    </svg>
-  )
-}
-
-function MenuIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="4" x2="20" y1="12" y2="12" />
-      <line x1="4" x2="20" y1="6" y2="6" />
-      <line x1="4" x2="20" y1="18" y2="18" />
-    </svg>
-  )
-}

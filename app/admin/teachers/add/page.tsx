@@ -1,15 +1,15 @@
 'use client'
 
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { ArrowLeft, Save, Upload } from "lucide-react"
-import AdminHeader from "../../header"
-import { useState } from "react"
 import { uploadImageToCloudinary } from "@/lib/utils"
+import { ArrowLeft, Save, Upload } from "lucide-react"
+import Link from "next/link"
+import { useState } from "react"
+import AdminHeader from "../../header"
 
 export default function AddTeacherPage() {
   const [name, setName] = useState("")

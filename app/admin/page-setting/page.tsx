@@ -1,20 +1,19 @@
 "use client"
 
-import type React from "react"
-import Image from "next/image"
-import { useEffect, useState } from "react"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Save, Upload, Plus, Trash2, Edit, Eye, ImageIcon, GraduationCap } from "lucide-react"
-import AdminHeader from "../header"
 import { Class, PageSettings, Teacher } from "@/lib/type"
 import { uploadImageToCloudinary } from "@/lib/utils"
+import { ImageIcon, Save, Upload } from "lucide-react"
+import Image from "next/image"
+import type React from "react"
+import { useEffect, useState } from "react"
+import AdminHeader from "../header"
 
 export default function PageSettingsPage() {
     const [pageSettings, setPageSettings] = useState<PageSettings | null>(null)
@@ -204,7 +203,7 @@ export default function PageSettingsPage() {
     }
 
     const handleSave = async () => {
-        let updatedImages = [...(pageSettings?.urlImage || [])];
+        const updatedImages = [...(pageSettings?.urlImage || [])];
         if (emptyFiles.every(file => file.size === 0)) {
             console.log("Tất cả các file đều rỗng.");
         } else {

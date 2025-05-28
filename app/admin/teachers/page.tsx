@@ -1,14 +1,13 @@
 "use client"
 
-import Link from "next/link"
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { UserPlus, Search, Edit, Trash2, User } from "lucide-react"
-import AdminHeader from "../header"
-import { useEffect, useState } from "react"
 import { Teacher } from "@/lib/type"
+import { Edit, Trash2, User, UserPlus } from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
+import { useEffect, useState } from "react"
+import AdminHeader from "../header"
 
 export default function TeachersPage() {
   const [loading, setLoading] = useState(true)

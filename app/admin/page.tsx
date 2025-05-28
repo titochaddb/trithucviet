@@ -1,7 +1,5 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CalendarDays, GraduationCap, Users, BookOpen } from "lucide-react"
+import { BookOpen, CalendarDays, GraduationCap, Users } from "lucide-react"
 import DashboardSchedule from "./dashboard-schedule"
 import AdminHeader from "./header"
 

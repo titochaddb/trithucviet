@@ -1,14 +1,14 @@
 'use client'
 
-import Link from "next/link"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { FolderPlus, Search, Edit, Trash2, BookOpen, User } from "lucide-react"
-import AdminHeader from "../header"
-import { useEffect, useState } from "react"
 import { Class } from "@/lib/type"
+import { BookOpen, Edit, FolderPlus, Search, Trash2, User } from "lucide-react"
+import Link from "next/link"
+import { useEffect, useState } from "react"
+import AdminHeader from "../header"
 
 export default function ClassesPage() {  // Sample data - in a real app, this would come from a database
   const [classes, setClasses] = useState<Class[]>([])

@@ -1,19 +1,16 @@
 'use client'
 
-import Link from "next/link"
-import Image from "next/image"
+import AdminHeader from "@/app/admin/header"
+import StudentClassesForm from "@/components/StudentClassForm"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, Save, Upload } from "lucide-react"
-import AdminHeader from "@/app/admin/header"
+import { Student } from "@/lib/type"
+import { ArrowLeft, Save } from "lucide-react"
+import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
-import StudentClassesForm from "@/components/StudentClassForm"
 import { useEffect, useState } from "react"
-import { Class, Student } from "@/lib/type"
 
 export default function EditStudentPage({ params }: { params: { id: string } }) {
 

@@ -1,19 +1,17 @@
 "use client"
 
-import Link from "next/link"
-import Image from "next/image"
+import AdminHeader from "@/app/admin/header"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { ArrowLeft, Save, Upload } from "lucide-react"
-import AdminHeader from "@/app/admin/header"
-import { useEffect, useState } from "react"
 import { Teacher } from "@/lib/type"
-import { useParams } from "next/navigation"
 import { uploadImageToCloudinary } from "@/lib/utils"
-import { useRouter } from "next/navigation"
+import { ArrowLeft, Save, Upload } from "lucide-react"
+import Link from "next/link"
+import { useParams, useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 export default function EditTeacherPage({ params }: { params: { id: string } }) {
   const [teacher, seTeacher] = useState<Teacher | null>(null)
