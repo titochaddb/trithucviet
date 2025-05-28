@@ -9,12 +9,15 @@ export default function AdminHeader() {
     const pathname = usePathname()
 
     const tabs = [
+        { label: "Cài đặt trang chủ", href: "/admin/home-setting" },
         { label: "Tổng quát", href: "/admin" },
         { label: "Giáo viên", href: "/admin/teachers" },
         { label: "Lớp học", href: "/admin/classes" },
         { label: "Học sinh", href: "/admin/students" },
         { label: "Lịch học", href: "/admin/schedule" },
         { label: "Báo cáo", href: "/admin/reports" },
+        { label: "Cài đặt", href: "/admin/page-setting" },
+
     ]
 
     return (

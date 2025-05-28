@@ -32,7 +32,6 @@ export default function EditClassPage({ params }: { params: { id: string } }) {
     try {
       const res = await fetch(`/api/class/${id}`)
       const data = await res.json()
-      setThisClass(data.thisClass)
       setInfo(data.thisClass)
     } catch (err) {
       console.error("Error fetching teacher:", err)
@@ -47,6 +46,7 @@ export default function EditClassPage({ params }: { params: { id: string } }) {
   }, [classId])
 
   const setInfo = (thisClass: Class) => {
+    setThisClass(thisClass)
     setSubject(thisClass.subject)
     setGrade(thisClass.grade)
     setTeacherName(thisClass.teacherName)
@@ -68,7 +68,12 @@ export default function EditClassPage({ params }: { params: { id: string } }) {
         studentIds: selectedStudents,
       };
 
-      const response = await fetch(`/api/class/${thisClass?._id}`, {
+      if (thisClass === null || thisClass?._id === undefined) {
+        alert("Không tìm thấy học sinh để sửa");
+        return;
+      }
+
+      const response = await fetch(`/api/class/${thisClass._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -84,8 +89,7 @@ export default function EditClassPage({ params }: { params: { id: string } }) {
       router.push("/admin/classes")
       clearForm()
 
-      // console.log(data.result.insertedId)
-      updateClassIdToStudent(thisClass?._id?.toString() || ""); ;
+      updateClassIdToStudent(thisClass._id.toString() || "");;
     } catch (error) {
       console.error("Lỗi sửa", error);
     }
@@ -93,28 +97,55 @@ export default function EditClassPage({ params }: { params: { id: string } }) {
 
   const updateClassIdToStudent = async (classId: string) => {
     try {
-      const updatePromises = selectedStudents.map((studentId) =>
+      const res = await fetch(`/api/student/class/${classId}`);
+      const data = await res.json();
+      const currentStudents = data.students || [];
+      const currentStudentIds = currentStudents.map((cls: any) => cls.id);
 
-        fetch(`/api/student/${studentId}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ classId }),
-        })
+      const studentsToRemove = currentStudentIds.filter(
+        (id: string) => !selectedStudents.includes(id)
       );
 
-      const results = await Promise.all(updatePromises);
+      const studentsToAdd = selectedStudents.filter(
+        (id: string) => !currentStudentIds.includes(id)
+      );
+
+      let removePromises: Promise<Response>[] = [];
+      if (studentsToRemove.length > 0) {
+        removePromises = studentsToRemove.map((studentId: any) =>
+          fetch(`/api/student/${studentId}/remove-class`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ classId }),
+          })
+        );
+      }
+      let addPromises: Promise<Response>[] = [];
+      if (studentsToAdd.length > 0) {
+        addPromises = studentsToAdd.map((studentId) => {
+          return fetch(`/api/student/${studentId}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ classId }),
+          });
+        });
+      } else {
+        addPromises = [];
+      }
+
+      const results = await Promise.all([...removePromises, ...addPromises]);
 
       const hasError = results.some((res) => !res.ok);
       if (hasError) {
-        alert("Có lỗi xảy ra khi cập nhật học sinh với classId.");
+        alert("Có lỗi xảy ra khi cập nhật học sinh vào các lớp.");
       } else {
-        console.log("Cập nhật classId cho học sinh thành công");
+        console.log("Cập nhật thành công.");
       }
     } catch (error) {
-      console.error("Lỗi khi cập nhật classId cho học sinh:", error);
-      alert("Lỗi khi cập nhật classId cho học sinh.");
+      console.error("Lỗi khi cập nhật lớp học:", error);
+      alert("Lỗi khi cập nhật lớp học.");
     }
   }
 
@@ -183,8 +214,8 @@ export default function EditClassPage({ params }: { params: { id: string } }) {
               <CardTitle>Danh sách học sinh của lớp</CardTitle>
             </CardHeader>
             <CardContent className="h-[600] overflow-y-auto">
-              <StudentListForm value={selectedStudents} 
-              onChange={(updatedStudents) => setSelectedStudents(updatedStudents)} />
+              <StudentListForm value={selectedStudents}
+                onChange={(updatedStudents) => setSelectedStudents(updatedStudents)} />
             </CardContent>
           </Card>
         </div>

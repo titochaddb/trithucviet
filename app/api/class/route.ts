@@ -12,14 +12,14 @@ export async function POST(req: Request) {
         studentIds
     }: Class = data;
     console.log(data)
-    
+
     if (!subject || !grade || !teacherName) {
-        
+
         return NextResponse.json({ message: "Missing required information" }, { status: 400 });
     }
 
     try {
-        
+
         const client = await clientPromise;
         const db = client.db("trithucviet");
         const collection = db.collection("classes");
@@ -55,18 +55,11 @@ export async function GET(req: Request) {
             .limit(limit)
             .toArray();
 
-        // const totalMedicines = await collection.countDocuments(query);
-        // const totalPages = Math.ceil(totalMedicines / limit);
-
         return NextResponse.json({
             classes: result,
 
         }, { status: 200 });
-        // return NextResponse.json({
-        //     medicines: result,
-        //     totalPages,
-        //     totalMedicines
-        // }, { status: 200 });
+
     } catch (error) {
         return NextResponse.json({ message: "Error fetching student" }, { status: 500 });
     }

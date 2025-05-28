@@ -38,3 +38,21 @@ export interface Class {
     room: string;
     studentIds?: string[];
 }
+
+export interface Banner {
+    id: number;
+    localImage?: string;
+    imageFile?: File;
+}
+
+export interface PageSettings {
+    _id?: string | ObjectId;
+    urlImage?: string[];
+    teacherIds?: string[];
+    classIds?: string[];
+}
+
+export interface TeacherSetting {
+    _id?: string | ObjectId
+    teacherId: string;
+}

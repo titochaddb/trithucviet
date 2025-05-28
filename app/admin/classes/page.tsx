@@ -12,27 +12,10 @@ import { Class } from "@/lib/type"
 
 export default function ClassesPage() {  // Sample data - in a real app, this would come from a database
   const [classes, setClasses] = useState<Class[]>([])
-  // const [teacherMap, setTeacherMap] = useState<Record<string, string>>({})
-  // const [teacherName, seTeacherName] = useState('')
-  // const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null)
-  // const fetchTeachers = async () => {
-  //   try {
-  //     const res = await fetch("/api/teacher")
-  //     const data = await res.json()
-
-  //     const map: Record<string, string> = {}
-  //     data.teachers.forEach((t: any) => {
-  //       map[t._id] = t.name
-  //     })
-
-  //     setTeacherMap(map)
-  //   } catch (err) {
-  //     console.error("Error fetching teachers:", err)
-  //   }
-  // }
+  const [loading, setLoading] = useState(true)
 
   const fetchClasses = async () => {
-    // setLoading(true)
+    setLoading(true)
     try {
       // const params = new URLSearchParams()
       // if (searchKeyword) params.set("search", searchKeyword)
@@ -50,9 +33,9 @@ export default function ClassesPage() {  // Sample data - in a real app, this wo
       console.error("Error fetching classes:", err)
       // showAlert("Lỗi khi tải danh sách thuốc", "error")
     }
-    // finally {
-    //   setLoading(false)
-    // }
+    finally {
+      setLoading(false)
+    }
   }
   useEffect(() => {
     fetchClasses()
@@ -72,24 +55,24 @@ export default function ClassesPage() {  // Sample data - in a real app, this wo
   //   }
   // }
   const handleDelete = async (thisClass: Class) => {
-      try {
-        const response = await fetch(`/api/class/${thisClass._id}`, {
-          method: "DELETE",
-        })
-  
-        if (!response.ok) {
-          throw new Error("Không thể xóa ")
-        }
-  
-        fetchClasses()
-        // closeMedicineDetailDialog()
-        alert("Đã xóa thành công")
-  
-      } catch (error) {
-        alert("Lỗi khi xóa")
+    try {
+      const response = await fetch(`/api/class/${thisClass._id}`, {
+        method: "DELETE",
+      })
+
+      if (!response.ok) {
+        throw new Error("Không thể xóa ")
       }
-      // Implement delete functionality here
+
+      fetchClasses()
+      // closeMedicineDetailDialog()
+      alert("Đã xóa thành công")
+
+    } catch (error) {
+      alert("Lỗi khi xóa")
     }
+    // Implement delete functionality here
+  }
   return (
     <div className="flex min-h-screen w-full flex-col">
       <AdminHeader />
@@ -115,7 +98,22 @@ export default function ClassesPage() {  // Sample data - in a real app, this wo
           </Button> */}
         </div>
 
-        <div className="rounded-md border">
+        {loading ? (
+          <div className="py-6 px-4">
+            <div className="animate-pulse space-y-4">
+              {[...Array(5)].map((_, i) => (
+                <div
+                  key={i}
+                  className="flex items-center space-x-4 border-b pb-3"
+                >
+                  <div className="w-10 h-4 bg-gray-200 rounded" />
+                  <div className="w-48 h-4 bg-gray-200 rounded" />
+                  <div className="w-64 h-4 bg-gray-200 rounded" />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (<div className="rounded-md border">
           <div className="relative w-full overflow-auto">
             <Table>
               <TableHeader>
@@ -170,7 +168,7 @@ export default function ClassesPage() {  // Sample data - in a real app, this wo
               </TableBody>
             </Table>
           </div>
-        </div>
+        </div>)}
       </main>
     </div>
   )

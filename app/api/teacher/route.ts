@@ -66,7 +66,6 @@ export async function GET(req: Request) {
 
         // const totalMedicines = await collection.countDocuments(query);
         // const totalPages = Math.ceil(totalMedicines / limit);
-
         return NextResponse.json({
             teachers: result,
 

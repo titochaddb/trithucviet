@@ -12,10 +12,11 @@ import AdminHeader from "../header"
 import { Student, Teacher } from "@/lib/type"
 
 export default function StudentsPage() {
+  const [loading, setLoading] = useState(true)
   const [students, setStudents] = useState<Student[]>([])
   // Sample data - in a real app, this would come from a database
   const fetchStudents = async () => {
-    // setLoading(true)
+    setLoading(true)
     try {
       // const params = new URLSearchParams()
       // if (searchKeyword) params.set("search", searchKeyword)
@@ -33,9 +34,9 @@ export default function StudentsPage() {
       console.error("Error fetching medicines:", err)
       // showAlert("Lỗi khi tải danh sách thuốc", "error")
     }
-    // finally {
-    //   setLoading(false)
-    // }
+    finally {
+      setLoading(false)
+    }
   }
   useEffect(() => {
     fetchStudents()
@@ -122,7 +123,22 @@ export default function StudentsPage() {
           </div>
         </div>
 
-        <div className="rounded-md border">
+        {loading ? (
+          <div className="py-6 px-4">
+            <div className="animate-pulse space-y-4">
+              {[...Array(5)].map((_, i) => (
+                <div
+                  key={i}
+                  className="flex items-center space-x-4 border-b pb-3"
+                >
+                  <div className="w-10 h-4 bg-gray-200 rounded" />
+                  <div className="w-48 h-4 bg-gray-200 rounded" />
+                  <div className="w-64 h-4 bg-gray-200 rounded" />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (<div className="rounded-md border">
           <div className="relative w-full overflow-auto">
             <Table>
               <TableHeader>
@@ -207,7 +223,7 @@ export default function StudentsPage() {
               </TableBody>
             </Table>
           </div>
-        </div>
+        </div>)}
       </main>
     </div>
   )

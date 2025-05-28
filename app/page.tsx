@@ -4,77 +4,107 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { BookOpen, GraduationCap, Users, Calendar } from "lucide-react"
+import clientPromise from "@/lib/mongodb"
+import { Class, PageSettings, Teacher } from "@/lib/type"
+import { ObjectId } from "mongodb";
 
-export default function Home() {
+// export async function getServerSideProps() {
+//   // Ở đây giả lập dữ liệu lấy từ database hoặc API
+//   try {
+//     const client = await clientPromise;
+//     const db = client.db("trithucviet");  // tên database của bạn
+
+//     // Lấy dữ liệu từ collection banners, teachers, classes
+
+//     const pageSettings = await db.collection("pagesetting").find({}).toArray();
+
+//     // Mongo trả về _id là ObjectId, bạn nên convert sang string để truyền props
+//     const pageSettingsClean = pageSettings.map(({ _id, ...rest }) => ({
+//       id: _id.toString(),
+//       ...rest,
+//     }));
+
+//     return {
+//       props: {
+//         pageSettings: pageSettingsClean,
+//       },
+//     };
+//   } catch (e) {
+//     console.error(e);
+//     return {
+//       props: {
+//         pageSettings: [],
+//       },
+//     };
+//   }
+// }
+// interface Props {
+//   pageSettings: PageSettings;
+// }
+
+export default async function Home() {
+
+  const getPageSettings = async () => {
+    try {
+      const client = await clientPromise;
+      const db = client.db("trithucviet");
+
+      const pageSettings = await db.collection("pagesetting").find({}).toArray();
+
+      const pageSettingsData: PageSettings = pageSettings[0] || {};
+      return pageSettingsData;
+    }
+    catch (error) {
+      console.error("Error fetching page settings:", error);
+      return {};
+    }
+  }
+
+  const getTeacherData = async (teacherID: string) => {
+    try {
+      const client = await clientPromise;
+      const db = client.db("trithucviet");
+      const teacherData = await db.collection("teachers").findOne({ _id: new ObjectId(teacherID) });
+      if (!teacherData) {
+        throw new Error(`Teacher with ID ${teacherID} not found`);
+      }
+      return teacherData;
+    } catch (error) {
+      console.error("Error fetching teacher data:", error);
+      return null;
+    }
+  }
+
+
+
+  const getClassData = async (classID: string) => {
+    try {
+      const client = await clientPromise;
+      const db = client.db("trithucviet");
+      const classData = await db.collection("classes").findOne({ _id: new ObjectId(classID) });
+      if (!classData) {
+        throw new Error(`Class with ID ${classID} not found`);
+      }
+      return classData;
+    } catch (error) {
+      console.error("Error fetching class data:", error);
+      return null;
+    }
+  }
+
+  const pageSettingsData: PageSettings = await getPageSettings();
+
+  const teacherDataPromises = pageSettingsData.teacherIds?.map((teacherId) => getTeacherData(teacherId)) || [];
+  const teacherData = await Promise.all(teacherDataPromises);
+  const validTeacherData = teacherData.filter((teacher) => teacher !== null) as Teacher[];
+
+  const classDataPromises = pageSettingsData.classIds?.map((classId) => getClassData(classId)) || [];
+  const classData = await Promise.all(classDataPromises);
+  const validClassData = classData.filter((cls) => cls !== null) as Class[];
+
   // Sample data - in a real app, this would come from a database
-  const classes = [
-    {
-      id: 1,
-      title: "Toán",
-      description: "Xây dựng nền tảng vững chắc về toán học",
-      level: "Lớp 9",
-    },
-    {
-      id: 2,
-      title: "Anh",
-      description: "Nâng cao từ vựng và ngữ pháp",
-      level: "Lớp 9",
-    },
-    {
-      id: 3,
-      title: "Văn",
-      description: "Phát triển kỹ năng viết và phân tích văn bản",
-      level: "Lớp 9",
-    },
-  ]
 
-  const teachers = [
-    {
-      id: 1,
-      name: "Thầy Cường",
-      subject: "Toán",
-      experience: "15 years",
-      education: "Ph.D. in Mathematics Education",
-      image: "/logo.jpg",
-    },
-    {
-      id: 2,
-      name: "Thầy Hùng",
-      subject: "Toán",
-      experience: "12 years",
-      education: "M.Sc. in Physics",
-      image: "/logo.jpg",
-    },
-    {
-      id: 3,
-      name: "Cô Hạnh",
-      subject: "Tiếng Anh",
-      experience: "8 years",
-      education: "B.A. in English Literature",
-      image: "/logo.jpg",
-    },
-  ]
 
-  const banners = [
-    {
-      id: 1,
-      title: "Summer Intensive Programs",
-      description: "Prepare for the upcoming school year with our focused summer courses",
-      image: "/banner.jpg",
-    },
-    {
-      id: 2,
-      title: "Personalized Learning",
-      description: "Small class sizes ensure individual attention for maximum academic improvement",
-      image: "/banner.jpg",
-    },
-    {
-      id: 3,
-      title: "Entrance Exam Success",
-      description: "90% of our students pass their target school entrance exams",
-      image: "/banner.jpg",
-    },
-  ]
 
   return (
     <main className="flex min-h-screen w-full flex-col">
@@ -122,8 +152,8 @@ export default function Home() {
         <div className="container max-w-none w-full px-4 md:px-6">
           <Carousel className="w-full">
             <CarouselContent>
-              {banners.map((banner) => (
-                <CarouselItem key={banner.id}>
+              {pageSettingsData.urlImage?.map((banner, index) => (
+                <CarouselItem key={index}>
                   {/* <div className="relative group h-[300px] md:h-[400px] w-full overflow-hidden rounded-xl shadow-2xl ring-1 ring-black/10">
                     <Image
                       src={banner.image || "/placeholder.svg"}
@@ -132,10 +162,10 @@ export default function Home() {
                       className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
                     />
                   </div> */}
-                  <div className="relative w-full aspect-[1958/745] overflow-hidden rounded-xl shadow-xl ring-1 ring-black/10 bg-white">
+                  <div className="relative w-full aspect-[16/9] overflow-hidden rounded-xl shadow-xl ring-1 ring-black/10 bg-white">
                     <Image
-                      src={banner.image || "/placeholder.svg"}
-                      alt={banner.title}
+                      src={banner || "/placeholder.svg"}
+                      alt={banner}
                       fill
                       className="object-contain"
                     />
@@ -215,28 +245,28 @@ export default function Home() {
             </div>
           </div>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-8">
-            {classes.map((classItem) => (
-              <Card key={classItem.id} className="overflow-hidden">
+            {validClassData.map((classItem) => (
+              <Card key={classItem._id?.toString()} className="overflow-hidden">
                 <CardHeader>
                   <div className="inline-block rounded-lg bg-purple-100 px-3 py-1 text-sm text-purple-800 mb-2">
-                    {classItem.level}
+                    {classItem.subject || "Môn học"}
                   </div>
-                  <CardTitle>{classItem.title}</CardTitle>
-                  <CardDescription>{classItem.description}</CardDescription>
+                  <CardTitle>{classItem.teacherName}</CardTitle>
+                  <CardDescription>{classItem.grade}</CardDescription>
                 </CardHeader>
-                <CardFooter>
+                {/* <CardFooter>
                   <Button variant="outline" className="w-full">
                     Xem chi tiết
                   </Button>
-                </CardFooter>
+                </CardFooter> */}
               </Card>
             ))}
           </div>
-          <div className="flex justify-center mt-8">
+          {/* <div className="flex justify-center mt-8">
             <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
               Xem các lớp đang có
             </Button>
-          </div>
+          </div> */}
         </div>
       </section>
 
@@ -252,8 +282,8 @@ export default function Home() {
             </div>
           </div>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-8">
-            {teachers.map((teacher) => (
-              <Card key={teacher.id} className="overflow-hidden">
+            {validTeacherData.map((teacher) => (
+              <Card key={teacher._id?.toString()} className="overflow-hidden">
                 <div className="aspect-square overflow-hidden">
                   <Image
                     src={teacher.image || "/placeholder.svg"}
@@ -271,11 +301,11 @@ export default function Home() {
                   <p className="text-sm text-gray-500">Kinh nghiệm: {teacher.experience}</p>
                   <p className="text-sm text-gray-500">Trình độ: {teacher.education}</p>
                 </CardContent>
-                <CardFooter>
+                {/* <CardFooter>
                   <Button variant="outline" className="w-full">
                     Xem thông tin chi tiết
                   </Button>
-                </CardFooter>
+                </CardFooter> */}
               </Card>
             ))}
           </div>
@@ -365,7 +395,7 @@ export default function Home() {
           </div>
           <div className="flex justify-center mt-10">
             <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
-              Xem lịch học
+              Đăng kí học ngay
             </Button>
           </div>
         </div>

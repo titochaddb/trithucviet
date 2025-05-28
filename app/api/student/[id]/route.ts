@@ -9,14 +9,14 @@ export async function PUT(
 ) {
     const { id } = await params;
     const {
-            name,
-            grade,
-            parentName,
-            parentPhone,
-            yearOfBirth,
-            address,
-            classIds
-        }: Student = await req.json();
+        name,
+        grade,
+        parentName,
+        parentPhone,
+        yearOfBirth,
+        address,
+        classIds
+    }: Student = await req.json();
 
     if (!name || !yearOfBirth) {
         return NextResponse.json({ message: "Missing information" }, { status: 400 });
@@ -31,11 +31,11 @@ export async function PUT(
                 $set: {
                     name,
                     grade,
-                    address,                    
+                    address,
                     yearOfBirth,
                     parentName,
-                    parentPhone,   
-                    classIds: classIds || [],                 
+                    parentPhone,
+                    classIds: classIds || [],
                 },
             }
         );
@@ -45,9 +45,8 @@ export async function PUT(
         }
 
         return NextResponse.json({ message: "Update successful" }, { status: 200 });
-    } 
-    catch (error) 
-    {
+    }
+    catch (error) {
         console.error("Error updating student:", error);
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });
     }
@@ -66,6 +65,11 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
         if (result.deletedCount === 0) {
             return NextResponse.json({ message: "Student not found" }, { status: 404 });
         }
+
+        await db.collection("classes").updateMany(
+            { studentIds: id }, // studentIds là string[]
+            { $pull: { studentIds: id } } as any
+        );
 
         return NextResponse.json({ message: "Delete successful" }, { status: 200 });
     } catch (error) {
@@ -99,31 +103,31 @@ export async function GET(
 }
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-  const { id } = await params;
+    const { id } = await params;
 
-  try {
-    const { classId } = await req.json();
+    try {
+        const { classId } = await req.json();
 
-    if (!classId) {
-      return NextResponse.json({ message: "Thiếu classId" }, { status: 400 });
+        if (!classId) {
+            return NextResponse.json({ message: "Thiếu classId" }, { status: 400 });
+        }
+
+        const client = await clientPromise;
+        const db = client.db("trithucviet");
+        const collection = db.collection("students");
+
+        const result = await collection.updateOne(
+            { _id: new ObjectId(id) },
+            { $addToSet: { classIds: classId } } // Thêm vào mảng nếu chưa có
+        );
+
+        if (result.matchedCount === 0) {
+            return NextResponse.json({ message: "Không tìm thấy học sinh" }, { status: 404 });
+        }
+
+        return NextResponse.json({ message: "Cập nhật thành công" }, { status: 200 });
+    } catch (error) {
+        console.error("Error in PATCH /students/[id]:", error);
+        return NextResponse.json({ message: "Lỗi máy chủ" }, { status: 500 });
     }
-
-    const client = await clientPromise;
-    const db = client.db("trithucviet");
-    const collection = db.collection("students");
-
-    const result = await collection.updateOne(
-      { _id: new ObjectId(id) },
-      { $addToSet: { classIds: classId } } // Thêm vào mảng nếu chưa có
-    );
-
-    if (result.matchedCount === 0) {
-      return NextResponse.json({ message: "Không tìm thấy học sinh" }, { status: 404 });
-    }
-
-    return NextResponse.json({ message: "Cập nhật thành công" }, { status: 200 });
-  } catch (error) {
-    console.error("Error in PATCH /students/[id]:", error);
-    return NextResponse.json({ message: "Lỗi máy chủ" }, { status: 500 });
-  }
 }

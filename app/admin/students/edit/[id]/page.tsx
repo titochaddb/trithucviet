@@ -37,7 +37,9 @@ export default function EditStudentPage({ params }: { params: { id: string } }) 
     try {
       const res = await fetch(`/api/student/${id}`)
       const data = await res.json()
-      setStudent(data.student)
+      // setStudent(data.student as Student)
+
+      // console.log("Fetched student:", student)
       setInfo(data.student)
     } catch (err) {
       console.error("Error fetching teacher:", err)
@@ -46,6 +48,7 @@ export default function EditStudentPage({ params }: { params: { id: string } }) 
   }
 
   const setInfo = (student: Student) => {
+    setStudent(student);
     setName(student.name);
     setYearOfBirth(student.yearOfBirth);
     setAddress(student.address);
@@ -66,7 +69,7 @@ export default function EditStudentPage({ params }: { params: { id: string } }) 
       alert("Nhập tên học sinh và năm sinh");
       return;
     }
-
+    // console.log("student:", student);
     try {
       const newStudent = {
         name: name,
@@ -77,9 +80,13 @@ export default function EditStudentPage({ params }: { params: { id: string } }) 
         parentPhone: parentPhone,
         classIds: selectedClasses, // Assuming selectedClasses is an array of class IDs
       };
-      console.log(newStudent)
-
-      const response = await fetch(`/api/student/${student?._id}`, {
+      // console.log("----------------", student?._id)
+      if (student === null || student?._id === undefined) {
+        alert("Không tìm thấy học sinh để sửa");
+        return;
+      }
+      // console.log("----------------", student._id)
+      const response = await fetch(`/api/student/${student._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -94,8 +101,8 @@ export default function EditStudentPage({ params }: { params: { id: string } }) 
       alert("Đã sửa thành công")
       router.push("/admin/students")
       clearForm()
-
-      updateStudentIdToClass(student?._id?.toString() || ""); // Update class IDs for the student
+      // console.log("----------------", student._id)
+      updateStudentIdToClass(student._id.toString() || ""); // Update class IDs for the student
     } catch (error) {
       console.error("Lỗi sửa", error);
     }
@@ -103,29 +110,87 @@ export default function EditStudentPage({ params }: { params: { id: string } }) 
 
   const updateStudentIdToClass = async (studentId: string) => {
     try {
-      const updatePromises = selectedClasses.map((classId) =>
-
-        fetch(`/api/class/${classId}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ studentId }),
-        })
+      // console.log("link api ", studentId);
+      // Bước 1: Lấy tất cả các lớp hiện tại học sinh đã tham gia
+      const res = await fetch(`/api/class/student/${studentId}`);
+      const data = await res.json(); // [{ _id: "abc", name: "Toán 6A", ... }, ...]
+      const currentClasses = data.classes || [];
+      console.log("Current classes:", currentClasses);
+      const currentClassIds = currentClasses.map((cls: any) => cls.id);
+      console.log("Current currentClassIds:", currentClassIds);
+      // Bước 2: Tìm ra những lớp cần xóa (không còn được chọn)
+      const classesToRemove = currentClassIds.filter(
+        (id: string) => !selectedClasses.includes(id)
       );
 
-      const results = await Promise.all(updatePromises);
+
+      // Bước 3: Tìm những lớp cần thêm
+      const classesToAdd = selectedClasses.filter(
+        (id: string) => !currentClassIds.includes(id)
+      );
+      console.log("Classes to remove:", classesToRemove);
+      // Bước 4: Xóa studentId khỏi các lớp không còn liên quan
+      let removePromises: Promise<Response>[] = [];
+      if (classesToRemove.length > 0) {
+        removePromises = classesToRemove.map((classId: any) =>
+          fetch(`/api/class/${classId}/remove-student`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ studentId }),
+          })
+        );
+      }
+      let addPromises: Promise<Response>[] = [];
+      if (classesToAdd.length > 0) {
+        addPromises = classesToAdd.map((classId) => {
+          return fetch(`/api/class/${classId}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ studentId }),
+          });
+        });
+      } else {
+        addPromises = [];
+      }
+
+      const results = await Promise.all([...removePromises, ...addPromises]);
 
       const hasError = results.some((res) => !res.ok);
       if (hasError) {
-        alert("Có lỗi xảy ra khi cập nhật học sinh với classId.");
+        alert("Có lỗi xảy ra khi cập nhật học sinh vào các lớp.");
       } else {
-        console.log("Cập nhật classId cho học sinh thành công");
+        console.log("Cập nhật thành công.");
       }
     } catch (error) {
-      console.error("Lỗi khi cập nhật classId cho học sinh:", error);
-      alert("Lỗi khi cập nhật classId cho học sinh.");
+      console.error("Lỗi khi cập nhật lớp học:", error);
+      alert("Lỗi khi cập nhật lớp học.");
     }
+
+    //   const updatePromises = selectedClasses.map((classId) =>
+
+    //     fetch(`/api/class/${classId}`, {
+    //       method: "PATCH",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({ studentId }),
+    //     })
+    //   );
+
+    //   const results = await Promise.all(updatePromises);
+
+    //   const hasError = results.some((res) => !res.ok);
+    //   if (hasError) {
+    //     alert("Có lỗi xảy ra khi cập nhật học sinh với classId.");
+    //   } else {
+    //     console.log("Cập nhật classId cho học sinh thành công");
+    //   }
+    // } catch (error) {
+    //   console.error("Lỗi khi cập nhật classId cho học sinh:", error);
+    //   alert("Lỗi khi cập nhật classId cho học sinh.");
+    // }
   }
 
   const clearForm = () => {
