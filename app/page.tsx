@@ -9,6 +9,8 @@ import { Class, PageSettings, Teacher } from "@/lib/type"
 import { ObjectId } from "mongodb";
 import { SiteHeader } from "@/components/SiteHeader"
 
+
+
 // export async function getServerSideProps() {
 //   // Ở đây giả lập dữ liệu lấy từ database hoặc API
 //   try {
@@ -42,7 +44,7 @@ import { SiteHeader } from "@/components/SiteHeader"
 // interface Props {
 //   pageSettings: PageSettings;
 // }
-
+export const revalidate = 0;
 export default async function Home() {
 
   const getPageSettings = async () => {
