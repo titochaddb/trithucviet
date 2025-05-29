@@ -68,13 +68,11 @@ export default function TeachersPage() {
     <div className="flex min-h-screen w-full flex-col">
       <AdminHeader />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Giáo viên</h1>
-          </div>
-          <Button className="bg-purple-600 hover:bg-purple-700" asChild>
-            <Link href="/admin/teachers/add">
-              <UserPlus className="mr-2 h-4 w-4" />
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-0">
+          <h1 className="text-2xl font-bold tracking-tight">Giáo viên</h1>
+          <Button className="bg-purple-600 hover:bg-purple-700 w-full md:w-auto" asChild>
+            <Link href="/admin/teachers/add" className="flex items-center justify-center gap-2">
+              <UserPlus className="h-4 w-4" />
               Thêm mới giáo viên
             </Link>
           </Button>
@@ -105,8 +103,8 @@ export default function TeachersPage() {
             </div>
           </div>
         ) : (<div className="rounded-md border">
-          <div className="relative w-full overflow-auto">
-            <Table>
+          <div className="hidden md:block relative w-full overflow-x-auto">
+            <Table className="min-w-[700px]">
               <TableHeader>
                 <TableRow>
                   <TableHead>Tên giáo viên</TableHead>
@@ -164,6 +162,34 @@ export default function TeachersPage() {
                 ))}
               </TableBody>
             </Table>
+          </div>
+          {/* Danh sách card chỉ hiện trên mobile */}
+          <div className="md:hidden space-y-4">
+            {teachers.map((teacher) => (
+              <div key={teacher._id?.toString()} className="border rounded-md p-4 shadow-sm">
+                <div className="flex items-center gap-4">
+                  <div className="relative h-12 w-12 rounded-full overflow-hidden">
+                    <Image src={teacher.image || "/placeholder.svg"} alt={teacher.name} width={48} height={48} className="object-cover" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg">{teacher.name}</h3>
+                    <p><strong>Môn học:</strong> {teacher.subject}</p>
+                    <p><strong>Kinh nghiệm:</strong> {teacher.experience}</p>
+                    <p><strong>Học vấn:</strong> {teacher.education}</p>
+                    <p><strong>Email:</strong> {teacher.email}</p>
+                    <p><strong>Điện thoại:</strong> {teacher.phone}</p>
+                  </div>
+                </div>
+                <div className="mt-3 flex gap-2">
+                  <Button size="sm" variant="outline" asChild>
+                    <Link href={`/admin/teachers/edit/${teacher._id}`}><Edit className="h-4 w-4" /><span className="sr-only">Edit</span></Link>
+                  </Button>
+                  <Button onClick={() => handleDelete(teacher)} size="sm" variant="outline" className="text-red-500 hover:text-red-700">
+                    <Trash2 className="h-4 w-4" /><span className="sr-only">Delete</span>
+                  </Button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>)}
       </main>

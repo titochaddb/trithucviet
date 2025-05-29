@@ -65,25 +65,23 @@ export default function StudentsPage() {
     <div className="flex min-h-screen w-full flex-col">
       <AdminHeader />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Quản lý học sinh</h1>
-          </div>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <h1 className="text-2xl font-bold tracking-tight">Quản lý học sinh</h1>
           <Button className="bg-purple-600 hover:bg-purple-700" asChild>
-            <Link href="/admin/students/add">
-              <UserPlus className="mr-2 h-4 w-4" />
+            <Link href="/admin/students/add" className="flex items-center gap-2 px-4 py-2">
+              <UserPlus className="h-4 w-4" />
               Thêm mới học sinh
             </Link>
           </Button>
         </div>
 
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
-          <div className="relative w-full max-w-sm">
+          {/* <div className="relative w-full max-w-sm">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input type="search" placeholder="Tìm kiếm học sinh ..." className="w-full bg-background pl-8 md:w-[300px]" />
-          </div>
+          </div> */}
           <div className="flex gap-2 flex-wrap">
-            <Select defaultValue="all">
+            {/* <Select defaultValue="all">
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Filter by grade" />
               </SelectTrigger>
@@ -92,8 +90,8 @@ export default function StudentsPage() {
                 <SelectItem value="8th">Lớp 8</SelectItem>
                 <SelectItem value="9th">Lớp 9</SelectItem>
                 {/* <SelectItem value="10th">10th Grade</SelectItem> */}
-              </SelectContent>
-            </Select>
+            {/* </SelectContent>
+            // </Select> */}
             {/* <Select defaultValue="all">
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Filter by class" />
