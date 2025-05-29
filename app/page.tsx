@@ -358,9 +358,11 @@ export default async function Home() {
             </div>
           </div>
           <div className="flex justify-center mt-10">
-            <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
-              Đăng kí học ngay
-            </Button>
+            <a href="https://forms.gle/Tf4M3MM3AZYinAyL6" target="_blank" rel="noopener noreferrer">
+              <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
+                Đăng kí học ngay
+              </Button>
+            </a>
           </div>
         </div>
       </section>
