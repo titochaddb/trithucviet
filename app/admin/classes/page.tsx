@@ -122,7 +122,7 @@ export default function ClassesPage() {  // Sample data - in a real app, this wo
                   <TableHead>Môn học</TableHead>
                   <TableHead>Khối</TableHead>
                   <TableHead>Giáo viên</TableHead>
-                  <TableHead>Số lượng học sinh</TableHead>
+                  {/* <TableHead>Số lượng học sinh</TableHead> */}
                   <TableHead>Room</TableHead>
                   <TableHead>Hành động</TableHead>
                 </TableRow>
@@ -142,7 +142,7 @@ export default function ClassesPage() {  // Sample data - in a real app, this wo
                       </Badge>
                     </TableCell>
                     <TableCell>{classItem.teacherName}</TableCell>
-                    <TableCell>{classItem.teacherName}</TableCell>
+                    {/* <TableCell>{classItem.teacherName}</TableCell> */}
                     <TableCell>{classItem.room}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">

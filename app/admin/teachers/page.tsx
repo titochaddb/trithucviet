@@ -51,7 +51,7 @@ export default function TeachersPage() {
       })
 
       if (!response.ok) {
-        throw new Error("Không thể thuốc")
+        throw new Error("Không thể xóa")
       }
 
       fetchTeachers()
@@ -59,7 +59,7 @@ export default function TeachersPage() {
       toast.success("Đã xóa thành công")
 
     } catch (error) {
-      toast.error("Lỗi khi xóa thuốc")
+      toast.error("Lỗi khi xóa")
     }
 
   }
