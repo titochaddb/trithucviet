@@ -110,44 +110,6 @@ export default async function Home() {
   return (
     <main className="flex min-h-screen w-full flex-col">
       <SiteHeader />
-      {/* Hero Section */}
-      {/* <section className="relative w-full bg-gradient-to-r from-purple-50 to-blue-50 py-12 md:py-24">
-        <div className="container max-w-none w-full px-4 md:px-6">
-          <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
-            <div className="flex flex-col justify-center space-y-4">
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                  Trung tâm Trí Thức Việt
-                </h1>
-                <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Trung tâm chuyên đào tạo học sinh từ tiểu học đến trung học cơ sở và đặc biệt là kỳ thi tuyển sinh lớp 10.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Link href="#classes">
-                  <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
-                    Explore Classes
-                  </Button>
-                </Link>
-                <Link href="#contact">
-                  <Button size="lg" variant="outline">
-                    Contact Us
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="flex items-center justify-center">
-              <Image
-                src="/logo.jpg"
-                width={600}
-                height={400}
-                alt="Students learning"
-                className="rounded-lg object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </section> */}
 
       {/* Banner Carousel */}
       <section className="w-full py-12 md:py-16 lg:py-20 bg-gradient-to-r from-purple-50 to-blue-50">

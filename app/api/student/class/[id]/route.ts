@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb"; // sửa đường dẫn tùy dự án
+import { RouteContext } from "@/lib/type";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+
+export async function GET(req: Request, context: RouteContext) {
     try {
-        console.log("vào đây");
-        const { id } = await params;
-        console.log("Fetching classes for studentId:", id);
+        const { id } = await context.params;
         const client = await clientPromise;
         const db = client.db("trithucviet");
         const collection = db.collection("students");

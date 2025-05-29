@@ -8,6 +8,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import AdminHeader from "../header"
+import toast from "react-hot-toast"
 
 export default function TeachersPage() {
   const [loading, setLoading] = useState(true)
@@ -41,69 +42,6 @@ export default function TeachersPage() {
   useEffect(() => {
     fetchTeachers()
   }, [])
-  // Sample data - in a real app, this would come from a database
-  // const teachers = [
-  //   {
-  //     id: 1,
-  //     name: "Dr. Sarah Johnson",
-  //     subject: "Mathematics",
-  //     experience: "15 years",
-  //     education: "Ph.D. in Mathematics Education",
-  //     email: "sarah.johnson@excelacademy.edu",
-  //     phone: "(555) 123-4567",
-  //     image: "/placeholder.svg?height=200&width=200",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Prof. Michael Chen",
-  //     subject: "Science",
-  //     experience: "12 years",
-  //     education: "M.Sc. in Physics",
-  //     email: "michael.chen@excelacademy.edu",
-  //     phone: "(555) 234-5678",
-  //     image: "/placeholder.svg?height=200&width=200",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Ms. Emily Rodriguez",
-  //     subject: "English",
-  //     experience: "8 years",
-  //     education: "B.A. in English Literature",
-  //     email: "emily.rodriguez@excelacademy.edu",
-  //     phone: "(555) 345-6789",
-  //     image: "/placeholder.svg?height=200&width=200",
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Dr. James Wilson",
-  //     subject: "Physics",
-  //     experience: "10 years",
-  //     education: "Ph.D. in Theoretical Physics",
-  //     email: "james.wilson@excelacademy.edu",
-  //     phone: "(555) 456-7890",
-  //     image: "/placeholder.svg?height=200&width=200",
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Mrs. Lisa Thompson",
-  //     subject: "History",
-  //     experience: "14 years",
-  //     education: "M.A. in History",
-  //     email: "lisa.thompson@excelacademy.edu",
-  //     phone: "(555) 567-8901",
-  //     image: "/placeholder.svg?height=200&width=200",
-  //   },
-  //   {
-  //     id: 6,
-  //     name: "Mr. David Kim",
-  //     subject: "Computer Science",
-  //     experience: "7 years",
-  //     education: "M.S. in Computer Science",
-  //     email: "david.kim@excelacademy.edu",
-  //     phone: "(555) 678-9012",
-  //     image: "/placeholder.svg?height=200&width=200",
-  //   },
-  // ]
 
   const handleDelete = async (teacher: Teacher) => {
 
@@ -118,46 +56,16 @@ export default function TeachersPage() {
 
       fetchTeachers()
       // closeMedicineDetailDialog()
-      alert("Đã xóa thành công")
+      toast.success("Đã xóa thành công")
 
     } catch (error) {
-      alert("Lỗi khi xóa thuốc")
+      toast.error("Lỗi khi xóa thuốc")
     }
 
   }
 
   return (
     <div className="flex min-h-screen w-full flex-col">
-      {/* <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-        <Link href="/admin" className="flex items-center gap-2 font-semibold">
-          <GraduationCapIcon className="h-6 w-6" />
-          <span>Excel Academy Admin</span>
-        </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link href="/admin" className="text-sm font-medium underline-offset-4 hover:underline">
-            Dashboard
-          </Link>
-          <Link
-            href="/admin/teachers"
-            className="text-sm font-medium text-purple-600 underline-offset-4 hover:underline"
-          >
-            Teachers
-          </Link>
-          <Link href="/admin/classes" className="text-sm font-medium underline-offset-4 hover:underline">
-            Classes
-          </Link>
-          <Link href="/admin/students" className="text-sm font-medium underline-offset-4 hover:underline">
-            Students
-          </Link>
-          <Link href="/admin/schedule" className="text-sm font-medium underline-offset-4 hover:underline">
-            Schedule
-          </Link>
-        </nav>
-        <Button variant="outline" size="sm" className="ml-auto md:hidden">
-          <MenuIcon className="h-4 w-4" />
-          <span className="sr-only">Toggle menu</span>
-        </Button>
-      </header> */}
       <AdminHeader />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="flex items-center justify-between">
@@ -234,12 +142,12 @@ export default function TeachersPage() {
                     <TableCell>{teacher.phone}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm" asChild>
+                        {/* <Button variant="outline" size="sm" asChild>
                           <Link href={`/admin/teachers/${teacher._id}`}>
                             <User className="h-4 w-4" />
                             <span className="sr-only">View Details</span>
                           </Link>
-                        </Button>
+                        </Button> */}
                         <Button variant="outline" size="sm" asChild>
                           <Link href={`/admin/teachers/edit/${teacher._id}`}>
                             <Edit className="h-4 w-4" />

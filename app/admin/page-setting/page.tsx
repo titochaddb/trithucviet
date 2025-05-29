@@ -14,6 +14,7 @@ import Image from "next/image"
 import type React from "react"
 import { useEffect, useState } from "react"
 import AdminHeader from "../header"
+import toast from "react-hot-toast"
 
 export default function PageSettingsPage() {
     const [pageSettings, setPageSettings] = useState<PageSettings | null>(null)
@@ -153,9 +154,9 @@ export default function PageSettingsPage() {
                         body: JSON.stringify(pageSettings),
                     });
                     if (!response.ok) throw new Error("Lỗi lưu cài đặt");
-                    alert("Lưu thành công!");
+                    toast.success("Lưu thành công!");
                 } catch (error) {
-                    alert("Lỗi khi lưu cài đặt trang");
+                    toast.error("Lỗi khi lưu cài đặt trang");
                 } finally {
                     setIsSaving(false);
                 }
@@ -219,7 +220,7 @@ export default function PageSettingsPage() {
 
                     } catch (error) {
                         console.error("Error uploading image:", error);
-                        alert("Lỗi khi tải ảnh lên. Vui lòng thử lại.");
+                        toast.error("Lỗi khi tải ảnh lên. Vui lòng thử lại.");
                     }
                 }
             }

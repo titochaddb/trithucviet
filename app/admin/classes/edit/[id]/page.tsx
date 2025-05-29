@@ -11,13 +11,14 @@ import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { use } from "react";
+import toast from "react-hot-toast"
 
 
 export default function EditClassPage() {
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
   const router = useRouter()
   const { id: classId } = useParams<{ id: string }>()
-   // Extract classId from params
+  // Extract classId from params
   const [thisClass, setThisClass] = useState<Class | null>(null)
   // Sample data - in a real app, this would come from a database
   const [subject, setSubject] = useState("")
@@ -35,7 +36,7 @@ export default function EditClassPage() {
       setInfo(data.thisClass)
     } catch (err) {
       console.error("Error fetching teacher:", err)
-      alert("Không tìm thấy lớp học")
+      toast.error("Không tìm thấy lớp học")
     }
   }
 
@@ -56,7 +57,7 @@ export default function EditClassPage() {
   // Sample teachers for dropdown
   const handleSave = async () => {
     if (!grade || !subject || !teacherName) {
-      alert("Nhập tên giáo viên và môn học");
+      toast.error("Nhập tên giáo viên và môn học");
       return;
     }
     try {
@@ -69,7 +70,7 @@ export default function EditClassPage() {
       };
 
       if (thisClass === null || thisClass?._id === undefined) {
-        alert("Không tìm thấy học sinh để sửa");
+        toast.error("Không tìm thấy học sinh để sửa");
         return;
       }
 
@@ -85,7 +86,7 @@ export default function EditClassPage() {
         throw new Error("Có lỗi xảy ra khi sửa giáo viên")
       }
       // closeAddMedicineDialog()
-      alert("Đã sửa thành công")
+      toast.success("Đã sửa thành công")
       router.push("/admin/classes")
       clearForm()
 
@@ -139,13 +140,13 @@ export default function EditClassPage() {
 
       const hasError = results.some((res) => !res.ok);
       if (hasError) {
-        alert("Có lỗi xảy ra khi cập nhật học sinh vào các lớp.");
+        toast.error("Có lỗi xảy ra khi cập nhật học sinh vào các lớp.");
       } else {
         console.log("Cập nhật thành công.");
       }
     } catch (error) {
       console.error("Lỗi khi cập nhật lớp học:", error);
-      alert("Lỗi khi cập nhật lớp học.");
+      toast.error("Lỗi khi cập nhật lớp học.");
     }
   }
 

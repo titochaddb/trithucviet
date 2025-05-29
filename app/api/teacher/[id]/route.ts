@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
-import { Teacher } from "@/lib/type";
+import { RouteContext, Teacher } from "@/lib/type";
 
 export async function PUT(
     req: Request,
-    { params }: { params: { id: string } }
+    context: RouteContext
 ) {
-    const { id } = await params;
+    const { id } = await context.params;
     const { name, address, certifications, bio, education, email, experience, image, phone, specialties, subject, yearOfBirth }: Teacher = await req.json();
 
     if (!name || !subject) {
@@ -61,8 +61,8 @@ export async function PUT(
 }
 
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-    const { id } = await params;
+export async function DELETE(req: Request, context: RouteContext) {
+    const { id } = await context.params;
 
     try {
         const client = await clientPromise;
@@ -82,7 +82,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
 
 export async function GET(
     req: NextRequest,
-    context: { params: { id: string } }
+    context: RouteContext
 ) {
     try {
         // console.log("params:", params);

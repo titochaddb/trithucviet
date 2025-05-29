@@ -12,6 +12,7 @@ import { ArrowLeft, Save, Upload } from "lucide-react"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import toast from "react-hot-toast"
 
 export default function EditTeacherPage() {
   const [teacher, seTeacher] = useState<Teacher | null>(null)
@@ -43,18 +44,18 @@ export default function EditTeacherPage() {
   };
 
   const setInfo = (teacher: Teacher) => {
-    setName(teacher.name)
-    setSubject(teacher.subject)
-    setExperience(teacher.experience)
-    setEducation(teacher.education)
-    setEmail(teacher.email)
-    setPhone(teacher.phone)
-    setYearOfBirth(teacher.yearOfBirth)
-    setAddress(teacher.address)
-    setCertifications(teacher.certifications)
-    setSpecialties(teacher.specialties)
-    setBio(teacher.bio)
-    setPreviewUrl(teacher.image)
+    setName(teacher.name || "")
+    setSubject(teacher.subject || "")
+    setExperience(teacher.experience || "")
+    setEducation(teacher.education || "")
+    setEmail(teacher.email || "")
+    setPhone(teacher.phone || "")
+    setYearOfBirth(teacher.yearOfBirth || "")
+    setAddress(teacher.address || "")
+    setCertifications(teacher.certifications || "")
+    setSpecialties(teacher.specialties || "")
+    setBio(teacher.bio || "")
+    setPreviewUrl(teacher.image || "")
   }
 
   const router = useRouter()
@@ -68,7 +69,7 @@ export default function EditTeacherPage() {
       setInfo(data.teacher)
     } catch (err) {
       console.error("Error fetching teacher:", err)
-      alert("Không tìm thấy giáo viên")
+      toast.error("Không tìm thấy giáo viên")
     }
   }
 
@@ -80,7 +81,7 @@ export default function EditTeacherPage() {
 
   const handleSave = async () => {
     if (!name || !subject) {
-      alert("Nhập tên giáo viên và môn học");
+      toast.error("Nhập tên giáo viên và môn học");
       return;
     }
 
@@ -117,7 +118,7 @@ export default function EditTeacherPage() {
         throw new Error("Có lỗi xảy ra khi sửa giáo viên")
       }
       // closeAddMedicineDialog()
-      alert("Đã sửa thành công")
+      toast.success("Đã sửa thành công")
       router.push("/admin/teachers")
       clearForm()
     } catch (error) {

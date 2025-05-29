@@ -2,10 +2,11 @@ import clientPromise from "@/lib/mongodb"
 import { Class } from "@/lib/type"
 import { ObjectId } from "mongodb"
 import { NextRequest, NextResponse } from "next/server"
+import { RouteContext } from "@/lib/type"
 
 export async function GET(
     req: NextRequest,
-    context: { params: { id: string } }
+    context: RouteContext
 ) {
     try {
         // console.log("params:", params);
@@ -30,9 +31,9 @@ export async function GET(
 
 export async function PUT(
     req: Request,
-    { params }: { params: { id: string } }
+    context: RouteContext
 ) {
-    const { id } = await params;
+    const { id } = await context.params;
     const { subject, grade, teacherName, room, studentIds }: Class = await req.json();
 
     if (!subject || !grade || !teacherName) {
@@ -79,8 +80,8 @@ export async function PUT(
 }
 
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-    const { id } = await params;
+export async function DELETE(req: Request, context: RouteContext) {
+    const { id } = await context.params;
 
     try {
         const client = await clientPromise;
@@ -103,8 +104,8 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     }
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-    const { id } = await params;
+export async function PATCH(req: Request, context: RouteContext) {
+    const { id } = await context.params;
 
     try {
         const { studentId } = await req.json();

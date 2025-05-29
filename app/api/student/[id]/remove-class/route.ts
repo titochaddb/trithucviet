@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import { RouteContext } from "@/lib/type";
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, context: RouteContext) {
     try {
-        console.log("vào đâyy:");
-        const { id } = await params;
-        console.log("classId:", id);
+        const { id } = await context.params;
         const body = await req.json();
         const { classId } = body;
         if (!classId) {

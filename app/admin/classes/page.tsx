@@ -9,6 +9,7 @@ import { BookOpen, Edit, FolderPlus, Search, Trash2, User } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import AdminHeader from "../header"
+import toast from "react-hot-toast"
 
 export default function ClassesPage() {  // Sample data - in a real app, this would come from a database
   const [classes, setClasses] = useState<Class[]>([])
@@ -66,10 +67,10 @@ export default function ClassesPage() {  // Sample data - in a real app, this wo
 
       fetchClasses()
       // closeMedicineDetailDialog()
-      alert("Đã xóa thành công")
+      toast.success("Đã xóa thành công")
 
     } catch (error) {
-      alert("Lỗi khi xóa")
+      toast.error("Lỗi khi xóa")
     }
     // Implement delete functionality here
   }
@@ -145,12 +146,12 @@ export default function ClassesPage() {  // Sample data - in a real app, this wo
                     <TableCell>{classItem.room}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm" asChild>
+                        {/* <Button variant="outline" size="sm" asChild>
                           <Link href={`/admin/classes/${classItem._id}`}>
                             <User className="h-4 w-4" />
                             <span className="sr-only">View Details</span>
                           </Link>
-                        </Button>
+                        </Button> */}
                         <Button variant="outline" size="sm" asChild>
                           <Link href={`/admin/classes/edit/${classItem._id}`}>
                             <Edit className="h-4 w-4" />

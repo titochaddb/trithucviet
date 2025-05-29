@@ -9,6 +9,7 @@ import { Edit, Phone, Search, Trash2, User, UserPlus } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import AdminHeader from "../header"
+import toast from "react-hot-toast"
 
 export default function StudentsPage() {
   const [loading, setLoading] = useState(true)
@@ -52,10 +53,10 @@ export default function StudentsPage() {
 
       fetchStudents()
       // closeMedicineDetailDialog()
-      alert("Đã xóa thành công")
+      toast.success("Đã xóa thành công")
 
     } catch (error) {
-      alert("Lỗi khi xóa")
+      toast.error("Lỗi khi xóa")
     }
     // Implement delete functionality here
   }
@@ -199,12 +200,12 @@ export default function StudentsPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm" asChild>
+                        {/* <Button variant="outline" size="sm" asChild>
                           <Link href={`/admin/students/${student._id}`}>
                             <User className="h-4 w-4" />
                             <span className="sr-only">View Details</span>
                           </Link>
-                        </Button>
+                        </Button> */}
                         <Button variant="outline" size="sm" asChild>
                           <Link href={`/admin/students/edit/${student._id}`}>
                             <Edit className="h-4 w-4" />

@@ -8,6 +8,7 @@ import { ArrowLeft, Save } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import AdminHeader from "../../header"
+import toast from 'react-hot-toast';
 
 export default function AddClassPage() {
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
@@ -18,7 +19,7 @@ export default function AddClassPage() {
   // Sample teachers for dropdown
   const handleAdd = async () => {
     if (!subject || !grade || !teacherName) {
-      alert("Nhập môn học, khối và tên giáo viên");
+      toast.error("Nhập môn học, khối và tên giáo viên");
       return;
     }
     try {
@@ -44,9 +45,9 @@ export default function AddClassPage() {
       if (!response.ok) {
         throw new Error("Không thể thêm lớp học")
       }
-      
+
       // closeAddMedicineDialog()
-      alert("Đã thêm thành công")
+      toast.success("Đã thêm thành công")
 
       clearForm()
       const data = await response.json()
@@ -74,13 +75,13 @@ export default function AddClassPage() {
 
       const hasError = results.some((res) => !res.ok);
       if (hasError) {
-        alert("Có lỗi xảy ra khi cập nhật học sinh với classId.");
+        toast.error("Có lỗi xảy ra khi cập nhật học sinh với classId.");
       } else {
         console.log("Cập nhật classId cho học sinh thành công");
       }
     } catch (error) {
       console.error("Lỗi khi cập nhật classId cho học sinh:", error);
-      alert("Lỗi khi cập nhật classId cho học sinh.");
+      toast.error("Lỗi khi cập nhật classId cho học sinh.");
     }
   }
 

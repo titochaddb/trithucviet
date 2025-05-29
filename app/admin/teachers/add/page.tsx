@@ -10,6 +10,7 @@ import { ArrowLeft, Save, Upload } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import AdminHeader from "../../header"
+import toast from "react-hot-toast"
 
 export default function AddTeacherPage() {
   const [name, setName] = useState("")
@@ -77,7 +78,7 @@ export default function AddTeacherPage() {
 
   const handleAdd = async () => {
     if (!name || !subject) {
-      alert("Nhập tên giáo viên và môn học");
+      toast.error("Nhập tên giáo viên và môn học");
       return;
     }
     try {
@@ -113,7 +114,7 @@ export default function AddTeacherPage() {
         throw new Error("Không thể thêm thuốc")
       }
       // closeAddMedicineDialog()
-      alert("Đã thêm thành công")
+      toast.success("Đã thêm thành công")
       clearForm()
     } catch (error) {
       console.error("Error uploading image:", error);

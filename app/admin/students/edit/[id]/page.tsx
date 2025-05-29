@@ -11,6 +11,7 @@ import { ArrowLeft, Save } from "lucide-react"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import toast from "react-hot-toast"
 
 export default function EditStudentPage() {
 
@@ -39,18 +40,18 @@ export default function EditStudentPage() {
       setInfo(data.student)
     } catch (err) {
       console.error("Error fetching teacher:", err)
-      alert("Không tìm thấy giáo viên")
+      toast.error("Không tìm thấy giáo viên")
     }
   }
 
   const setInfo = (student: Student) => {
-    setStudent(student);
-    setName(student.name);
-    setYearOfBirth(student.yearOfBirth);
-    setAddress(student.address);
-    setGrade(student.grade);
-    setParentName(student.parentName);
-    setParentPhone(student.parentPhone);
+    setStudent(student || null);
+    setName(student.name || "");
+    setYearOfBirth(student.yearOfBirth || "");;
+    setAddress(student.address || "");
+    setGrade(student.grade || "");
+    setParentName(student.parentName || "");
+    setParentPhone(student.parentPhone || "");
     setSelectedClasses(student.classIds || []);
   }
 
@@ -62,7 +63,7 @@ export default function EditStudentPage() {
 
   const handleSave = async () => {
     if (!name || !yearofbirth) {
-      alert("Nhập tên học sinh và năm sinh");
+      toast.error("Nhập tên học sinh và năm sinh");
       return;
     }
     // console.log("student:", student);
@@ -78,7 +79,7 @@ export default function EditStudentPage() {
       };
       // console.log("----------------", student?._id)
       if (student === null || student?._id === undefined) {
-        alert("Không tìm thấy học sinh để sửa");
+        toast.error("Không tìm thấy học sinh để sửa");
         return;
       }
       // console.log("----------------", student._id)
@@ -94,7 +95,7 @@ export default function EditStudentPage() {
         throw new Error("Có lỗi xảy ra khi sửa giáo viên")
       }
       // closeAddMedicineDialog()
-      alert("Đã sửa thành công")
+      toast.success("Đã sửa thành công")
       router.push("/admin/students")
       clearForm()
       // console.log("----------------", student._id)
@@ -155,13 +156,13 @@ export default function EditStudentPage() {
 
       const hasError = results.some((res) => !res.ok);
       if (hasError) {
-        alert("Có lỗi xảy ra khi cập nhật học sinh vào các lớp.");
+        toast.error("Có lỗi xảy ra khi cập nhật học sinh vào các lớp.");
       } else {
         console.log("Cập nhật thành công.");
       }
     } catch (error) {
       console.error("Lỗi khi cập nhật lớp học:", error);
-      alert("Lỗi khi cập nhật lớp học.");
+      toast.error("Lỗi khi cập nhật lớp học.");
     }
 
     //   const updatePromises = selectedClasses.map((classId) =>

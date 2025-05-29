@@ -9,6 +9,7 @@ import { ArrowLeft, Save } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import AdminHeader from "../../header"
+import toast from "react-hot-toast"
 
 export default function AddStudentPage() {
   // Sample data - in a real app, this would come from a databaseconst [selectedClasses, setSelectedClasses] = useState<string[]>([]);
@@ -23,7 +24,7 @@ export default function AddStudentPage() {
 
   const handleAdd = async () => {
     if (!name || !yearofbirth) {
-      alert("Nhập tên học sinh và năm sinh");
+      toast.error("Nhập tên học sinh và năm sinh");
       return;
     }
     try {
@@ -50,7 +51,7 @@ export default function AddStudentPage() {
         throw new Error("Không thể thêm học sinh")
       }
       // closeAddMedicineDialog()
-      alert("Đã thêm thành công")
+      toast.success("Đã thêm thành công")
       clearForm()
       const data = await response.json()
       console.log(data.result.insertedId)
@@ -77,13 +78,13 @@ export default function AddStudentPage() {
 
       const hasError = results.some((res) => !res.ok);
       if (hasError) {
-        alert("Có lỗi xảy ra khi cập nhật học sinh với classId.");
+        toast.error("Có lỗi xảy ra khi cập nhật học sinh với classId.");
       } else {
         console.log("Cập nhật classId cho học sinh thành công");
       }
     } catch (error) {
       console.error("Lỗi khi cập nhật classId cho học sinh:", error);
-      alert("Lỗi khi cập nhật classId cho học sinh.");
+      toast.error("Lỗi khi cập nhật classId cho học sinh.");
     }
   }
   const clearForm = () => {

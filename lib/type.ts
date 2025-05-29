@@ -56,3 +56,7 @@ export interface TeacherSetting {
     _id?: string | ObjectId
     teacherId: string;
 }
+
+export type RouteContext = {
+    params: Promise<{ id: string }>;
+};
