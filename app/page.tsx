@@ -434,5 +434,6 @@ export default async function Home() {
         </div>
       </footer>
     </main>
+
   )
 }
